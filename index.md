@@ -1,37 +1,56 @@
-## Welcome to GitHub Pages
+# IDEA + SpringBoot + JSP + Tomcat 配置
 
-You can use the [editor on GitHub](https://github.com/LeeSpringFly/IDEA-SpringBoot-JSP-Tomcat/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+**1. 使用外部 Tomcat 而不是 Spring Boot 内嵌的 Tomcat 时，添加**
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+```xml
+<!-- 添加 Servlet -->
+<dependency>
+	<groupId>javax.servlet</groupId>
+	<artifactId>javax.servlet-api</artifactId>
+	<scope>provided</scope>
+</dependency>
+		
+<!-- 移除内嵌的 Tomcat -->		
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <exclusions>
+		<!--移除tomcat插件，将项目部署到本地tomcat-->
+        <exclusion>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+		</exclusion>
+	</exclusions>
+</dependency>
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+<!-- 移除使用内嵌 Tomcat 的 JSP 标签 -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tomcat.embed</groupId>-->
+<!--            <artifactId>tomcat-embed-jasper</artifactId>-->
+<!--        </dependency>-->
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+**2. 添加启动类**
 
-### Jekyll Themes
+```java
+@SpringBootApplication
+public class AllApplication extends SpringBootServletInitializer {
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/LeeSpringFly/IDEA-SpringBoot-JSP-Tomcat/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+    public static void main(String[] args) {
+        SpringApplication.run(AllApplication.class, args);
+    }
 
-### Support or Contact
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        // 注意这里要指向原先用main方法执行的Application启动类
+        return builder.sources(AllApplication.class);
+    }
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+}
+```
+
+**3. 添加 Tomcat**
+
+	![tomcat配置1](./tomcat配置1.png)
+	
+	![tomcat配置2](./tomcat配置2.png)
