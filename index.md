@@ -51,6 +51,6 @@ public class AllApplication extends SpringBootServletInitializer {
 
 **3. 添加 Tomcat**
 
-	![tomcat配置1](./tomcat配置1.png)
+![tomcat配置1](./tomcat-config-1.png)
 	
-	![tomcat配置2](./tomcat配置2.png)
+![tomcat配置2](./tomcat-config-2.png)
